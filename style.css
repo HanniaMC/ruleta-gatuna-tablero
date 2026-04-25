@@ -1,0 +1,265 @@
+* {
+box-sizing: border-box;
+}
+
+html {
+min-height: 100%;
+background: linear-gradient(180deg, #1b102b, #3b1d54);
+}
+
+body {
+margin: 0;
+min-height: 100vh;
+background: linear-gradient(180deg, #1b102b, #3b1d54);
+background-attachment: fixed;
+font-family: Arial, sans-serif;
+color: white;
+}
+.app {
+min-height: 100dvh;
+padding: 18px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.panel {
+width: min(92vw, 600px);
+padding: 28px;
+text-align: center;
+background: rgba(255, 255, 255, 0.08);
+border-radius: 24px;
+box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+h1 {
+margin: 0 0 8px;
+}
+
+p {
+opacity: 0.9;
+}
+
+button {
+border: none;
+border-radius: 999px;
+padding: 12px 20px;
+background: #f7c6ff;
+color: #2b123f;
+font-weight: bold;
+font-size: 15px;
+cursor: pointer;
+transition: transform 0.2s, opacity 0.2s;
+}
+
+button:hover {
+transform: scale(1.04);
+}
+
+button:disabled {
+opacity: 0.45;
+cursor: not-allowed;
+transform: none;
+}
+
+.opciones-tablero {
+margin-top: 24px;
+display: flex;
+justify-content: center;
+gap: 16px;
+flex-wrap: wrap;
+}
+
+.opciones-tablero button span {
+font-size: 22px;
+}
+
+.oculto {
+display: none !important;
+}
+
+#pantallaJuego {
+width: 100%;
+max-width: 900px;
+text-align: center;
+}
+
+.header-juego {
+margin-bottom: 12px;
+}
+
+.controles {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-bottom: 14px;
+flex-wrap: wrap;
+}
+
+.selector-colores {
+margin: 12px auto;
+padding: 14px;
+width: min(95vw, 560px);
+border-radius: 18px;
+background: rgba(255, 255, 255, 0.08);
+}
+
+.botones-colores {
+display: flex;
+justify-content: center;
+flex-wrap: wrap;
+gap: 10px;
+}
+
+.color-btn {
+width: 52px;
+height: 52px;
+border-radius: 50%;
+padding: 0;
+border: 3px solid white;
+}
+
+.color-btn.usado {
+opacity: 0.25;
+pointer-events: none;
+}
+
+.progreso {
+font-size: 14px;
+margin-bottom: 12px;
+}
+
+.tablero {
+width: min(94vw, 780px);
+margin: 0 auto;
+display: grid;
+gap: min(1.4vw, 10px);
+}
+
+.caja {
+aspect-ratio: 1 / 1;
+border-radius: 14px;
+background: rgba(255, 255, 255, 0.08);
+background-image: url("img/caja.png");
+background-size: 80%;
+background-position: center;
+background-repeat: no-repeat;
+box-shadow: inset 0 -5px 12px rgba(0,0,0,0.25), 0 8px 18px rgba(0,0,0,0.25);
+cursor: pointer;
+transition: transform 0.2s, filter 0.2s, opacity 0.3s;
+}
+
+.caja:hover {
+transform: scale(1.05);
+filter: brightness(1.12);
+}
+
+.caja.seleccionada {
+outline: 4px solid #f7c6ff;
+filter: brightness(1.25);
+}
+
+.caja.hueco {
+visibility: hidden;
+pointer-events: none;
+}
+
+.overlay {
+position: fixed;
+inset: 0;
+background: rgba(10, 4, 20, 0.86);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 20;
+padding: 20px;
+}
+
+.reveal-card {
+text-align: center;
+}
+
+.caja-grande {
+width: min(72vw, 420px);
+animation: shake 0.25s infinite;
+}
+
+.caja-grande.pop {
+animation: pop 0.45s ease forwards;
+}
+
+.gato-grande {
+width: min(70vw, 380px);
+animation: gatoPop 0.55s ease;
+}
+
+#resultadoTexto {
+margin-top: 18px;
+font-size: clamp(24px, 5vw, 42px);
+text-shadow: 0 4px 18px rgba(0,0,0,0.45);
+}
+
+@keyframes shake {
+0% { transform: translateX(0) rotate(0deg); }
+25% { transform: translateX(-8px) rotate(-2deg); }
+50% { transform: translateX(8px) rotate(2deg); }
+75% { transform: translateX(-6px) rotate(-1deg); }
+100% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes pop {
+0% { transform: scale(1); opacity: 1; }
+55% { transform: scale(1.18); opacity: 1; }
+100% { transform: scale(0.4); opacity: 0; }
+}
+
+@keyframes gatoPop {
+0% { transform: scale(0.2); opacity: 0; }
+70% { transform: scale(1.12); opacity: 1; }
+100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 600px) {
+.app {
+padding: 12px;
+align-items: flex-start;
+}
+
+.panel {
+margin-top: 40px;
+padding: 22px;
+}
+
+.tablero {
+width: 96vw;
+gap: 6px;
+}
+
+.caja {
+border-radius: 10px;
+}
+
+button {
+width: 100%;
+max-width: 280px;
+}
+
+.color-btn {
+width: 46px;
+height: 46px;
+}
+}
+.caja.inspeccion-preview {
+outline: 4px solid #ffffff;
+filter: brightness(1.25);
+}
+
+.caja.inspeccion-segura {
+outline: 4px solid #22c55e;
+filter: brightness(1.25);
+}
+
+.caja.inspeccion-peligro {
+outline: 4px solid #ef4444;
+filter: brightness(1.25);
+}
