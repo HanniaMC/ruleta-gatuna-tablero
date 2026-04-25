@@ -263,3 +263,10 @@ filter: brightness(1.25);
 outline: 4px solid #ef4444;
 filter: brightness(1.25);
 }
+.caja.fila-preview {
+box-shadow:
+0 0 0 5px #ff4d6d,
+0 0 25px rgba(255,77,109,0.85),
+inset 0 -5px 12px rgba(0,0,0,0.25);
+filter: brightness(1.3);
+}

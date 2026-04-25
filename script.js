@@ -15,11 +15,25 @@ const overlay = document.getElementById("overlay");
 const cajaGrande = document.getElementById("cajaGrande");
 const gatoGrande = document.getElementById("gatoGrande");
 const resultadoTexto = document.getElementById("resultadoTexto");
-const sonidoGato = document.getElementById("sonidoGato");
+const sonidosGato = [
+document.getElementById("sonidoGato1"),
+document.getElementById("sonidoGato2"),
+document.getElementById("sonidoGato3"),
+document.getElementById("sonidoGato4")
+];
+
+const sonidosConfeti = [
+document.getElementById("sonidoConfeti1"),
+document.getElementById("sonidoConfeti2")
+];
 
 const btnInspeccion = document.getElementById("btnInspeccion");
 const btnConfirmarInspeccion = document.getElementById("btnConfirmarInspeccion");
 const btnCancelarInspeccion = document.getElementById("btnCancelarInspeccion");
+
+const btnFila = document.getElementById("btnFila");
+const btnConfirmarFila = document.getElementById("btnConfirmarFila");
+const btnCancelarFila = document.getElementById("btnCancelarFila");
 
 let columnas = 0;
 let filas = 0;
@@ -35,6 +49,9 @@ let animacionActiva = false;
 
 let modoAnterior = null;
 let areaInspeccionActual = [];
+
+let filaActual = [];
+let abriendoFila = false;
 
 const colores = [
 { nombre: "azul", valor: "#3b82f6" },
@@ -112,7 +129,7 @@ mensaje.textContent = `Color elegido: ${color}. Selecciona 3 cajas para esconder
 }
 
 function manejarClickCaja(numero, elemento) {
-if (animacionActiva) return;
+if (animacionActiva || abriendoFila) return;
 
 if (modo === "seleccion") {
 seleccionarCajaPreparacion(numero, elemento);
@@ -121,6 +138,11 @@ return;
 
 if (modo === "inspeccion") {
 seleccionarAreaInspeccion(numero);
+return;
+}
+
+if (modo === "fila") {
+seleccionarFila(numero);
 return;
 }
 
@@ -220,6 +242,7 @@ btnAgregar.classList.add("oculto");
 btnHecho.classList.add("oculto");
 btnIniciar.classList.add("oculto");
 btnInspeccion.classList.remove("oculto");
+btnFila.classList.remove("oculto");
 selectorColores.classList.add("oculto");
 
 limpiarSeleccionVisual();
@@ -307,6 +330,7 @@ mensaje.textContent = "Elige otra caja cuando sea tu turno.";
 function mostrarResultadoSeguro() {
 resultadoTexto.textContent = "¡Estás a salvo! 🐾";
 lanzarConfeti();
+reproducirSonidoConfeti();
 }
 
 function mostrarResultadoGato(gato) {
@@ -335,14 +359,41 @@ colors: ["#f7c6ff", "#a855f7", "#3b82f6", "#f97316", "#ffffff"]
 });
 }
 
-function reproducirSonidoGato() {
-if (!sonidoGato) return;
+let ultimoConfeti = -1;
 
-sonidoGato.currentTime = 0;
-sonidoGato.play().catch(() => {
-console.log("El navegador bloqueó el sonido hasta que haya interacción suficiente.");
-});
+function reproducirSonidoConfeti() {
+let indice;
+
+do {
+indice = Math.floor(Math.random() * sonidosConfeti.length);
+} while (indice === ultimoConfeti && sonidosConfeti.length > 1);
+
+ultimoConfeti = indice;
+
+const sonido = sonidosConfeti[indice];
+sonido.currentTime = 0;
+sonido.play().catch(() => {});
 }
+
+
+
+let ultimoSonido = -1;
+
+function reproducirSonidoGato() {
+let indice;
+
+do {
+indice = Math.floor(Math.random() * sonidosGato.length);
+} while (indice === ultimoSonido);
+
+ultimoSonido = indice;
+
+const sonido = sonidosGato[indice];
+
+sonido.currentTime = 0;
+sonido.play().catch(() => {});
+}
+
 function activarInspeccion() {
 if (modo !== "juego" || animacionActiva) return;
 
@@ -359,10 +410,25 @@ btnCancelarInspeccion.classList.remove("oculto");
 mensaje.textContent = "Elige una caja para revisar una zona 3x3 🐾";
 }
 
-function seleccionarAreaInspeccion(numeroCentro) {
+function seleccionarAreaInspeccion(numero) {
 limpiarMarcasInspeccion();
 
-areaInspeccionActual = obtenerArea3x3(numeroCentro);
+let area = obtenerArea3x3(numero);
+
+// Si no cabe, intenta mover automáticamente hacia arriba/izquierda
+if (!area) {
+const indice = numero - 1;
+let fila = Math.floor(indice / columnas);
+let col = indice % columnas;
+
+fila = Math.min(fila, filas - 3);
+col = Math.min(col, columnas - 3);
+
+const nuevoNumero = fila * columnas + col + 1;
+area = obtenerArea3x3(nuevoNumero);
+}
+
+areaInspeccionActual = area;
 
 areaInspeccionActual.forEach(numero => {
 const caja = document.querySelector(`.caja[data-numero="${numero}"]`);
@@ -448,26 +514,155 @@ caja.classList.remove(
 });
 }
 
-function obtenerArea3x3(numeroCentro) {
-const indice = numeroCentro - 1;
-const filaCentro = Math.floor(indice / columnas);
-const columnaCentro = indice % columnas;
+function obtenerArea3x3(numeroInicio) {
+const indice = numeroInicio - 1;
+const filaInicio = Math.floor(indice / columnas);
+const columnaInicio = indice % columnas;
+
+// Si desde esa caja no cabe un 3x3 completo, no permite seleccionar
+if (filaInicio + 2 >= filas || columnaInicio + 2 >= columnas) {
+return null;
+}
 
 const area = [];
 
-for (let fila = filaCentro - 1; fila <= filaCentro + 1; fila++) {
-for (let columna = columnaCentro - 1; columna <= columnaCentro + 1; columna++) {
-    if (
-    fila >= 0 &&
-    fila < filas &&
-    columna >= 0 &&
-    columna < columnas
-    ) {
+for (let fila = filaInicio; fila < filaInicio + 3; fila++) {
+for (let columna = columnaInicio; columna < columnaInicio + 3; columna++) {
     const numero = fila * columnas + columna + 1;
     area.push(numero);
-    }
 }
 }
 
 return area;
+}
+function activarFila() {
+if (modo !== "juego" || animacionActiva || abriendoFila) return;
+
+modo = "fila";
+filaActual = [];
+
+limpiarMarcasFila();
+
+btnFila.classList.add("oculto");
+btnInspeccion.classList.add("oculto");
+
+btnConfirmarFila.classList.remove("oculto");
+btnCancelarFila.classList.remove("oculto");
+
+mensaje.textContent = "Elige una fila completa para abrirla";
+}
+
+function seleccionarFila(numero) {
+limpiarMarcasFila();
+
+const indice = numero - 1;
+const fila = Math.floor(indice / columnas);
+
+filaActual = [];
+
+for (let col = 0; col < columnas; col++) {
+const numeroCaja = fila * columnas + col + 1;
+filaActual.push(numeroCaja);
+
+const caja = document.querySelector(`.caja[data-numero="${numeroCaja}"]`);
+
+if (caja && !caja.classList.contains("hueco")) {
+    caja.classList.add("fila-preview");
+}
+}
+
+mensaje.textContent = "Fila seleccionada. Presiona “Hecho” para abrirla.";
+}
+
+async function confirmarFila() {
+if (modo !== "fila") return;
+
+if (filaActual.length === 0) {
+mensaje.textContent = "Primero selecciona una fila.";
+return;
+}
+
+abriendoFila = true;
+modo = "animandoFila";
+
+btnConfirmarFila.classList.add("oculto");
+btnCancelarFila.classList.add("oculto");
+
+limpiarMarcasFila();
+
+mensaje.textContent = "La fila se está abriendo...";
+
+for (const numero of filaActual) {
+const caja = document.querySelector(`.caja[data-numero="${numero}"]`);
+
+if (caja && !caja.classList.contains("hueco")) {
+    await revelarCajaEnFila(numero, caja);
+}
+}
+
+filaActual = [];
+abriendoFila = false;
+modo = "juego";
+
+btnFila.classList.remove("oculto");
+btnInspeccion.classList.remove("oculto");
+
+mensaje.textContent = "La fila terminó de abrirse. Continúa el juego.";
+}
+
+function cancelarFila() {
+limpiarMarcasFila();
+
+filaActual = [];
+modo = "juego";
+
+btnConfirmarFila.classList.add("oculto");
+btnCancelarFila.classList.add("oculto");
+
+btnFila.classList.remove("oculto");
+btnInspeccion.classList.remove("oculto");
+
+mensaje.textContent = "Cancelada. Elige una caja cuando sea tu turno.";
+}
+
+function limpiarMarcasFila() {
+document.querySelectorAll(".caja").forEach(caja => {
+caja.classList.remove("fila-preview");
+});
+}
+
+function revelarCajaEnFila(numero, elemento) {
+return new Promise(resolve => {
+const gatoEncontrado = gatosFinales.find(gato => gato.posicion === numero);
+
+if (gatoEncontrado) {
+    gatosFinales = gatosFinales.filter(gato => gato.posicion !== numero);
+}
+
+overlay.classList.remove("oculto");
+cajaGrande.classList.remove("oculto", "pop");
+gatoGrande.classList.add("oculto");
+gatoGrande.src = "";
+resultadoTexto.textContent = "";
+
+setTimeout(() => {
+    cajaGrande.classList.add("pop");
+}, 800);
+
+setTimeout(() => {
+    cajaGrande.classList.add("oculto");
+
+    if (gatoEncontrado) {
+    mostrarResultadoGato(gatoEncontrado);
+    } else {
+    mostrarResultadoSeguro();
+    }
+}, 1150);
+
+setTimeout(() => {
+    overlay.classList.add("oculto");
+    elemento.classList.add("hueco");
+    resolve();
+}, 2300);
+});
 }
