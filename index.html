@@ -3,25 +3,32 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Tablero Gatuno</title>
+<title>Gatos Mañosos</title>
+<link rel="icon" type="image/png" href="img/logog.png">
+<link rel="icon" sizes="16x16" href="img/logog.png">
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <main class="app">
 <section id="pantallaInicio" class="panel">
-    <h1>Tablero Gatuno</h1>
-    <p>Elige el tamaño del tablero para comenzar 🐾</p>
+    <img src="img/logo1.png" class="logo">
+    <p>Elige el tamaño del tablero para comenzar!</p>
 
-    <div class="opciones-tablero">
-    <button onclick="elegirTablero(5, 6)">Tablero pequeño<br><span>5 x 6</span></button>
-    <button onclick="elegirTablero(6, 7)">Tablero grande<br><span>6 x 7</span></button>
-    </div>
+<div class="opciones-tablero">
+<button class="boton-tablero" onclick="elegirTablero(5, 6)">
+Tablero pequeño<br><span>5 x 6</span>
+</button>
+
+<button class="boton-tablero" onclick="elegirTablero(6, 7)">
+Tablero grande<br><span>6 x 7</span>
+</button>
+</div>
 </section>
 
 <section id="pantallaJuego" class="oculto">
     <header class="header-juego">
-    <h1>Tablero Gatuno</h1>
+<img src="img/logo2.png" class="logo logo-chico">
     <p id="mensaje">Prepara el tablero escondiendo gatos.</p>
     </header>
 
@@ -63,8 +70,11 @@
 <audio id="sonidoGato2" src="audio/gato2.mp3"></audio>
 <audio id="sonidoGato3" src="audio/gato3.mp3"></audio>
 <audio id="sonidoGato4" src="audio/gato4.mp3"></audio>
+
 <audio id="sonidoConfeti1" src="audio/confeti1.mp3"></audio>
 <audio id="sonidoConfeti2" src="audio/confeti2.mp3"></audio>
+
+<audio id="sonidoTensionFinal" src="audio/tension-final.mp3"></audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="script.js"></script>
