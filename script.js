@@ -1,3 +1,6 @@
+// =====================
+// ELEMENTOS DEL DOM
+// =====================
 const pantallaInicio = document.getElementById("pantallaInicio");
 const pantallaJuego = document.getElementById("pantallaJuego");
 const tablero = document.getElementById("tablero");
@@ -18,12 +21,16 @@ const btnCancelarInspeccion = document.getElementById("btnCancelarInspeccion");
 const btnFila = document.getElementById("btnFila");
 const btnConfirmarFila = document.getElementById("btnConfirmarFila");
 const btnCancelarFila = document.getElementById("btnCancelarFila");
+const btnReiniciar = document.getElementById("btnReiniciar");
 
 const overlay = document.getElementById("overlay");
 const cajaGrande = document.getElementById("cajaGrande");
 const gatoGrande = document.getElementById("gatoGrande");
 const resultadoTexto = document.getElementById("resultadoTexto");
 
+// =====================
+// AUDIOS
+// =====================
 const sonidosGato = [
 document.getElementById("sonidoGato1"),
 document.getElementById("sonidoGato2"),
@@ -38,6 +45,9 @@ document.getElementById("sonidoConfeti2")
 
 const sonidoTensionFinal = document.getElementById("sonidoTensionFinal");
 
+// =====================
+// ESTADO DEL JUEGO
+// =====================
 let columnas = 0;
 let filas = 0;
 let totalCajas = 0;
@@ -48,8 +58,8 @@ let seleccionActual = [];
 let gatosRegistrados = [];
 let gatosFinales = [];
 let coloresUsados = [];
-let animacionActiva = false;
 
+let animacionActiva = false;
 let areaInspeccionActual = [];
 let filaActual = [];
 let abriendoFila = false;
@@ -57,6 +67,9 @@ let abriendoFila = false;
 let ultimoSonidoGato = -1;
 let ultimoConfeti = -1;
 
+// =====================
+// COLORES DISPONIBLES
+// =====================
 const colores = [
 { nombre: "azul", valor: "#3b82f6" },
 { nombre: "rojo", valor: "#ef4444" },
@@ -66,6 +79,9 @@ const colores = [
 { nombre: "rosa", valor: "#ec4899" }
 ];
 
+// =====================
+// INICIO Y TABLERO
+// =====================
 function elegirTablero(cols, rows) {
 columnas = cols;
 filas = rows;
@@ -94,6 +110,9 @@ tablero.appendChild(caja);
 }
 }
 
+// =====================
+// PREPARACIÓN DE GATOS
+// =====================
 function abrirSelectorColores() {
 if (modo === "juego" || modo === "seleccion" || animacionActiva) return;
 
@@ -101,6 +120,7 @@ selectorColores.classList.remove("oculto");
 botonesColores.innerHTML = "";
 seleccionActual = [];
 colorActual = null;
+
 limpiarSeleccionVisual();
 
 mensaje.textContent = "Elige un color disponible para este jugador.";
@@ -133,29 +153,6 @@ btnHecho.classList.remove("oculto");
 mensaje.textContent = `Color elegido: ${color}. Selecciona 3 cajas para esconder tus gatos.`;
 }
 
-function manejarClickCaja(numero, elemento) {
-if (animacionActiva || abriendoFila) return;
-
-if (modo === "seleccion") {
-seleccionarCajaPreparacion(numero, elemento);
-return;
-}
-
-if (modo === "inspeccion") {
-seleccionarAreaInspeccion(numero);
-return;
-}
-
-if (modo === "fila") {
-seleccionarFila(numero);
-return;
-}
-
-if (modo === "juego") {
-revelarCaja(numero, elemento);
-}
-}
-
 function seleccionarCajaPreparacion(numero, elemento) {
 if (!colorActual) {
 mensaje.textContent = "Primero elige un color.";
@@ -181,11 +178,9 @@ elemento.classList.add("seleccionada");
 
 const faltan = 3 - seleccionActual.length;
 
-if (faltan === 0) {
-mensaje.textContent = "Listo. Presiona “Hecho” para ocultar tus gatos.";
-} else {
-mensaje.textContent = `Selecciona ${faltan} caja(s) más.`;
-}
+mensaje.textContent = faltan === 0
+? "Listo. Presiona “Hecho” para ocultar tus gatos."
+: `Selecciona ${faltan} caja(s) más.`;
 }
 
 function guardarGatos() {
@@ -233,6 +228,9 @@ function actualizarProgreso() {
 progreso.textContent = `Jugadores listos: ${coloresUsados.length} / mínimo 2`;
 }
 
+// =====================
+// INICIAR JUEGO
+// =====================
 function iniciarJuego() {
 if (coloresUsados.length < 2) {
 mensaje.textContent = "Se necesitan al menos 2 jugadores para comenzar 🐾";
@@ -294,6 +292,35 @@ const indiceRandom = Math.floor(Math.random() * libres.length);
 return libres[indiceRandom];
 }
 
+// =====================
+// CLIC EN CAJAS
+// =====================
+function manejarClickCaja(numero, elemento) {
+if (animacionActiva || abriendoFila) return;
+
+if (modo === "seleccion") {
+seleccionarCajaPreparacion(numero, elemento);
+return;
+}
+
+if (modo === "inspeccion") {
+seleccionarAreaInspeccion(numero);
+return;
+}
+
+if (modo === "fila") {
+seleccionarFila(numero);
+return;
+}
+
+if (modo === "juego") {
+revelarCaja(numero, elemento);
+}
+}
+
+// =====================
+// REVELAR CAJA
+// =====================
 function revelarCaja(numero, elemento) {
 if (animacionActiva) return;
 if (elemento.classList.contains("hueco")) return;
@@ -337,10 +364,18 @@ setTimeout(() => {
 overlay.classList.add("oculto");
 elemento.classList.add("hueco");
 animacionActiva = false;
-mensaje.textContent = "Elige otra caja cuando sea tu turno.";
+
+verificarFinJuego();
+
+if (contarCajasActivas() > 0) {
+    mensaje.textContent = "Elige otra caja cuando sea tu turno.";
+}
 }, tiempoCerrar);
 }
 
+// =====================
+// RESULTADOS
+// =====================
 function mostrarResultadoSeguro() {
 resultadoTexto.textContent = "¡Estás a salvo!";
 lanzarConfeti();
@@ -353,15 +388,16 @@ const nombreArchivo = gato.sistema ? "normal" : gato.color;
 gatoGrande.src = `img/gato-${nombreArchivo}.png`;
 gatoGrande.classList.remove("oculto");
 
-if (gato.sistema) {
-resultadoTexto.textContent = "¡Gato misterioso! Pierdes una vida 💔";
-} else {
-resultadoTexto.textContent = `¡Gato ${gato.color}! Pierdes una vida 💔`;
-}
+resultadoTexto.textContent = gato.sistema
+? "¡Gato misterioso! Pierdes una vida 💔"
+: `¡Gato ${gato.color}! Pierdes una vida 💔`;
 
 reproducirSonidoGato();
 }
 
+// =====================
+// CONFETI Y SONIDOS
+// =====================
 function lanzarConfeti() {
 if (typeof confetti !== "function") return;
 
@@ -385,7 +421,6 @@ indice = Math.floor(Math.random() * sonidosConfeti.length);
 ultimoConfeti = indice;
 
 const sonido = sonidosConfeti[indice];
-
 if (!sonido) return;
 
 sonido.currentTime = 0;
@@ -404,28 +439,26 @@ indice = Math.floor(Math.random() * sonidosGato.length);
 ultimoSonidoGato = indice;
 
 const sonido = sonidosGato[indice];
-
 if (!sonido) return;
 
 sonido.currentTime = 0;
 sonido.play().catch(() => {});
 }
 
+// =====================
+// TENSIÓN FINAL
+// =====================
 function contarCajasActivas() {
 return document.querySelectorAll(".caja:not(.hueco)").length;
 }
 
 function reproducirTensionFinalSiAplica() {
-const cajasActivas = document.querySelectorAll(".caja:not(.hueco)").length;
-
-console.log("Cajas activas:", cajasActivas);
+const cajasActivas = contarCajasActivas();
 
 if (cajasActivas <= 5 && sonidoTensionFinal) {
 sonidoTensionFinal.volume = 1;
 sonidoTensionFinal.currentTime = 0;
-sonidoTensionFinal.play().catch(error => {
-    console.log("Error tensión:", error);
-});
+sonidoTensionFinal.play().catch(() => {});
 return true;
 }
 
@@ -439,6 +472,24 @@ sonidoTensionFinal.pause();
 sonidoTensionFinal.currentTime = 0;
 }
 
+// =====================
+// FIN DEL JUEGO
+// =====================
+function verificarFinJuego() {
+const cajas = contarCajasActivas();
+
+if (cajas === 0) {
+mensaje.textContent = "Se acabaron las cajas";
+
+if (btnReiniciar) {
+    btnReiniciar.classList.remove("oculto");
+}
+}
+}
+
+// =====================
+// INSPECCIÓN 3X3
+// =====================
 function activarInspeccion() {
 if (modo !== "juego" || animacionActiva || abriendoFila) return;
 
@@ -523,11 +574,9 @@ if (caja && !caja.classList.contains("hueco")) {
 }
 });
 
-if (gatosEnArea.length > 0) {
-mensaje.textContent = `Hay ${gatosEnArea.length} gato(s) oculto(s) en esta zona 🐈‍⬛`;
-} else {
-mensaje.textContent = "Aquí están a salvo 🐾";
-}
+mensaje.textContent = gatosEnArea.length > 0
+? `Hay ${gatosEnArea.length} gato(s) oculto(s) en esta zona 🐈‍⬛`
+: "Aquí están a salvo 🐾";
 
 btnConfirmarInspeccion.classList.add("oculto");
 btnCancelarInspeccion.classList.add("oculto");
@@ -538,7 +587,10 @@ modo = "juego";
 
 setTimeout(() => {
 limpiarMarcasInspeccion();
-mensaje.textContent = "Elige una caja cuando sea tu turno.";
+
+if (contarCajasActivas() > 0) {
+    mensaje.textContent = "Elige una caja cuando sea tu turno.";
+}
 }, 4000);
 }
 
@@ -553,7 +605,7 @@ btnCancelarInspeccion.classList.add("oculto");
 btnInspeccion.classList.remove("oculto");
 btnFila.classList.remove("oculto");
 
-mensaje.textContent = "Inspección cancelada. Elige una caja cuando sea tu turno.";
+mensaje.textContent = "Elige una caja cuando sea tu turno.";
 }
 
 function limpiarMarcasInspeccion() {
@@ -587,6 +639,9 @@ for (let columna = columnaInicio; columna < columnaInicio + 3; columna++) {
 return area;
 }
 
+// =====================
+// ABRIR FILA
+// =====================
 function activarFila() {
 if (modo !== "juego" || animacionActiva || abriendoFila) return;
 
@@ -622,7 +677,7 @@ if (caja && !caja.classList.contains("hueco")) {
 }
 }
 
-mensaje.textContent = "Fila seleccionada. Presiona “Hecho fila” para abrirla.";
+mensaje.textContent = "Fila seleccionada. Presiona “Hecho” para abrirla.";
 }
 
 async function confirmarFila() {
@@ -641,7 +696,7 @@ btnCancelarFila.classList.add("oculto");
 
 limpiarMarcasFila();
 
-mensaje.textContent = "La fila maldita se está abriendo... 💀";
+mensaje.textContent = "La fila se está abriendo...";
 
 for (const numero of filaActual) {
 const caja = document.querySelector(`.caja[data-numero="${numero}"]`);
@@ -658,7 +713,11 @@ modo = "juego";
 btnFila.classList.remove("oculto");
 btnInspeccion.classList.remove("oculto");
 
+verificarFinJuego();
+
+if (contarCajasActivas() > 0) {
 mensaje.textContent = "La fila terminó de abrirse. Continúa el juego.";
+}
 }
 
 function cancelarFila() {
@@ -721,5 +780,14 @@ setTimeout(() => {
     elemento.classList.add("hueco");
     resolve();
 }, tiempoCerrar);
+});
+}
+
+// =====================
+// EVENTOS
+// =====================
+if (btnReiniciar) {
+btnReiniciar.addEventListener("click", () => {
+location.reload();
 });
 }

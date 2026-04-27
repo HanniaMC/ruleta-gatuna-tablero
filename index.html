@@ -4,48 +4,49 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Gatos Mañosos</title>
+
 <link rel="icon" type="image/png" href="img/logog.png">
 <link rel="icon" sizes="16x16" href="img/logog.png">
 <link rel="stylesheet" href="style.css" />
 </head>
-<body>
 
+<body>
 <main class="app">
 <section id="pantallaInicio" class="panel">
-    <img src="img/logo1.png" class="logo">
+    <img src="img/logo1.png" class="logo" alt="Gatos Mañosos">
+
     <p>Elige el tamaño del tablero para comenzar!</p>
 
-<div class="opciones-tablero">
-<button class="boton-tablero" onclick="elegirTablero(5, 6)">
-Tablero pequeño<br><span>5 x 6</span>
-</button>
+    <div class="opciones-tablero">
+    <button class="boton-tablero" onclick="elegirTablero(5, 6)">
+        Tablero pequeño<br><span>5 x 6</span>
+    </button>
 
-<button class="boton-tablero" onclick="elegirTablero(6, 7)">
-Tablero grande<br><span>6 x 7</span>
-</button>
-</div>
+    <button class="boton-tablero" onclick="elegirTablero(6, 7)">
+        Tablero grande<br><span>6 x 7</span>
+    </button>
+    </div>
 </section>
 
 <section id="pantallaJuego" class="oculto">
     <header class="header-juego">
-<img src="img/logo2.png" class="logo logo-chico">
+    <img src="img/logo2.png" class="logo logo-chico" alt="Gatos Mañosos">
     <p id="mensaje">Prepara el tablero escondiendo gatos.</p>
     </header>
 
-<div id="controles" class="controles">
-<button id="btnAgregar" onclick="abrirSelectorColores()">Añadir gatos</button>
-<button id="btnHecho" class="oculto" onclick="guardarGatos()">Hecho</button>
-<button id="btnIniciar" onclick="iniciarJuego()">Iniciar juego</button>
+    <div id="controles" class="controles">
+    <button id="btnAgregar" onclick="abrirSelectorColores()">Añadir gatos</button>
+    <button id="btnHecho" class="oculto" onclick="guardarGatos()">Hecho</button>
+    <button id="btnIniciar" onclick="iniciarJuego()">Iniciar juego</button>
 
-<button id="btnInspeccion" class="oculto" onclick="activarInspeccion()">Ver 3x3</button>
-<button id="btnConfirmarInspeccion" class="oculto" onclick="confirmarInspeccion()">Hecho</button>
-<button id="btnCancelarInspeccion" class="oculto" onclick="cancelarInspeccion()">Cancelar</button>
+    <button id="btnInspeccion" class="oculto" onclick="activarInspeccion()">Ver 3x3</button>
+    <button id="btnConfirmarInspeccion" class="oculto" onclick="confirmarInspeccion()">Hecho</button>
+    <button id="btnCancelarInspeccion" class="oculto" onclick="cancelarInspeccion()">Cancelar</button>
 
-<button id="btnFila" class="oculto" onclick="activarFila()">Abrir fila</button>
-<button id="btnConfirmarFila" class="oculto" onclick="confirmarFila()">Hecho</button>
-<button id="btnCancelarFila" class="oculto" onclick="cancelarFila()">Cancelar</button>
-
-</div>
+    <button id="btnFila" class="oculto" onclick="activarFila()">Abrir fila</button>
+    <button id="btnConfirmarFila" class="oculto" onclick="confirmarFila()">Hecho</button>
+    <button id="btnCancelarFila" class="oculto" onclick="cancelarFila()">Cancelar</button>
+    </div>
 
     <div id="selectorColores" class="selector-colores oculto">
     <p>Elige tu color de gato:</p>
@@ -57,7 +58,9 @@ Tablero grande<br><span>6 x 7</span>
     <section id="tablero" class="tablero"></section>
 </section>
 </main>
-
+<button id="btnReiniciar" class="boton-tablero oculto">
+Volver a jugar
+</button>
 <div id="overlay" class="overlay oculto">
 <div class="reveal-card">
     <img id="cajaGrande" src="img/caja.png" alt="Caja misteriosa" class="caja-grande" />

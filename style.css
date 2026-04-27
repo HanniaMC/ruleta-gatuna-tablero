@@ -1,11 +1,20 @@
+/* =====================
+BASE GENERAL
+===================== */
 * {
 box-sizing: border-box;
+}
+
+html,
+body {
+width: 100%;
+max-width: 100%;
+overflow-x: hidden;
 }
 
 html {
 min-height: 100%;
 background: linear-gradient(180deg, #1b102b, #3b1d54);
-
 }
 
 body {
@@ -17,70 +26,26 @@ font-family: Arial, sans-serif;
 color: white;
 }
 
-html, body {
-overflow-x: hidden;
-}
+/* =====================
+CONTENEDORES
+===================== */
 .app {
 min-height: 100dvh;
 padding: 18px;
 display: flex;
 justify-content: center;
-align-items: flex-start; /* 🔥 cambio clave */
+align-items: flex-start;
 }
 
 .panel {
 width: min(92vw, 600px);
+max-width: 100%;
+margin: 60px auto 0;
 padding: 28px;
 text-align: center;
 background: rgba(255, 255, 255, 0.08);
 border-radius: 24px;
 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-}
-
-h1 {
-margin: 0 0 8px;
-}
-
-p {
-opacity: 0.9;
-}
-
-button {
-border: none;
-border-radius: 999px;
-padding: 12px 20px;
-background: #f7c6ff;
-color: #2b123f;
-font-weight: bold;
-font-size: 15px;
-cursor: pointer;
-transition: transform 0.2s, opacity 0.2s;
-}
-
-button:hover {
-transform: scale(1.04);
-}
-
-button:disabled {
-opacity: 0.45;
-cursor: not-allowed;
-transform: none;
-}
-
-.opciones-tablero {
-margin-top: 24px;
-display: flex;
-justify-content: center;
-gap: 16px;
-flex-wrap: wrap;
-}
-
-.opciones-tablero button span {
-font-size: 22px;
-}
-
-.oculto {
-display: none !important;
 }
 
 #pantallaJuego {
@@ -93,7 +58,111 @@ text-align: center;
 margin-bottom: 12px;
 }
 
+.oculto {
+display: none !important;
+}
 
+/* =====================
+LOGOS
+===================== */
+.logo {
+display: block;
+max-width: 100%;
+height: auto;
+margin: 0 auto;
+object-fit: contain;
+}
+
+.logo-grande {
+width: clamp(180px, 70vw, 420px);
+margin-bottom: 10px;
+}
+
+.logo-chico {
+width: clamp(220px, 55vw, 620px);
+margin: 0 auto 8px;
+}
+
+/* =====================
+BOTONES TABLERO
+===================== */
+.opciones-tablero {
+margin-top: 24px;
+display: flex;
+justify-content: center;
+gap: 16px;
+flex-wrap: wrap;
+}
+
+.boton-tablero {
+background: linear-gradient(145deg, #e9c6ff, #d8a8f7);
+color: #2a0a3d;
+border: none;
+padding: 14px 28px;
+border-radius: 24px;
+font-weight: bold;
+font-size: 16px;
+cursor: pointer;
+position: relative;
+overflow: hidden;
+
+box-shadow:
+0 8px 16px rgba(0, 0, 0, 0.3),
+0 0 10px rgba(216, 168, 247, 0.3),
+inset 0 2px 5px rgba(255, 255, 255, 0.6);
+
+transition: box-shadow 0.2s ease;
+}
+
+.boton-tablero:hover {
+box-shadow:
+0 12px 22px rgba(0, 0, 0, 0.4),
+0 0 20px rgba(216, 168, 247, 0.8),
+inset 0 2px 5px rgba(255, 255, 255, 0.8);
+}
+
+.boton-tablero:active {
+box-shadow:
+0 4px 8px rgba(0, 0, 0, 0.35),
+inset 0 3px 7px rgba(0, 0, 0, 0.2);
+}
+
+.boton-tablero::after {
+content: "";
+position: absolute;
+top: 0;
+left: -100%;
+width: 200%;
+height: 100%;
+background: linear-gradient(
+120deg,
+transparent,
+rgba(255, 255, 255, 0.5),
+transparent
+);
+transform: skewX(-20deg);
+pointer-events: none;
+transition: left 0.5s ease;
+}
+
+.boton-tablero:hover::after {
+left: 100%;
+}
+
+.boton-tablero span {
+display: block;
+font-size: 26px;
+margin-top: 2px;
+}
+
+#btnReiniciar {
+margin: 20px auto 0;
+display: block;
+}
+
+/* =====================
+BOTONES DE JUEGO
+===================== */
 .controles {
 display: flex;
 justify-content: center;
@@ -101,7 +170,6 @@ gap: 10px;
 margin-bottom: 14px;
 flex-wrap: wrap;
 }
-
 
 .controles button {
 background: linear-gradient(145deg, #e9c6ff, #d8a8f7);
@@ -143,7 +211,7 @@ border-radius: 20px;
 background: linear-gradient(
 120deg,
 transparent,
-rgba(255,255,255,0.25),
+rgba(255, 255, 255, 0.25),
 transparent
 );
 opacity: 0;
@@ -154,50 +222,16 @@ transition: opacity 0.3s ease;
 .controles button:hover::after {
 opacity: 1;
 }
-.boton-tablero {
-background: linear-gradient(145deg, #e9c6ff, #d8a8f7);
-color: #2a0a3d;
-border: none;
-padding: 14px 28px;
-border-radius: 24px;
-font-weight: bold;
-font-size: 16px;
-cursor: pointer;
 
-position: relative;
-overflow: hidden;
-
-box-shadow:
-0 8px 16px rgba(0, 0, 0, 0.3),
-0 0 10px rgba(216, 168, 247, 0.3),
-inset 0 2px 5px rgba(255, 255, 255, 0.6);
-
-transition: box-shadow 0.2s ease;
-}
-
-.boton-tablero::after {
-content: "";
-position: absolute;
-top: 0;
-left: -100%;
-width: 200%;
-height: 100%;
-
-background: linear-gradient(
-120deg,
-transparent,
-rgba(255, 255, 255, 0.5),
-transparent
-);
-
-transform: skewX(-20deg);
-pointer-events: none;
-
-transition: left 0.5s ease; /* 🔥 AQUÍ */
-}
-
-.boton-tablero:hover::after {
-left: 100%;
+/* =====================
+SELECTOR DE COLORES
+===================== */
+.selector-colores {
+margin: 12px auto;
+padding: 14px;
+width: min(95vw, 560px);
+border-radius: 18px;
+background: rgba(255, 255, 255, 0.08);
 }
 
 .botones-colores {
@@ -225,6 +259,9 @@ font-size: 14px;
 margin-bottom: 12px;
 }
 
+/* =====================
+TABLERO Y CAJAS
+===================== */
 .tablero {
 width: min(94vw, 780px);
 margin: 0 auto;
@@ -240,7 +277,9 @@ background-image: url("img/caja.png");
 background-size: 80%;
 background-position: center;
 background-repeat: no-repeat;
-box-shadow: inset 0 -5px 12px rgba(0,0,0,0.25), 0 8px 18px rgba(0,0,0,0.25);
+box-shadow:
+inset 0 -5px 12px rgba(0, 0, 0, 0.25),
+0 8px 18px rgba(0, 0, 0, 0.25);
 cursor: pointer;
 transition: transform 0.2s, filter 0.2s, opacity 0.3s;
 }
@@ -260,6 +299,35 @@ visibility: hidden;
 pointer-events: none;
 }
 
+/* =====================
+INSPECCIÓN Y FILA
+===================== */
+.caja.inspeccion-preview {
+outline: 4px solid #ffffff;
+filter: brightness(1.25);
+}
+
+.caja.inspeccion-segura {
+outline: 4px solid #22c55e;
+filter: brightness(1.25);
+}
+
+.caja.inspeccion-peligro {
+outline: 4px solid #ef4444;
+filter: brightness(1.25);
+}
+
+.caja.fila-preview {
+box-shadow:
+0 0 0 5px #ff4d6d,
+0 0 25px rgba(255, 77, 109, 0.85),
+inset 0 -5px 12px rgba(0, 0, 0, 0.25);
+filter: brightness(1.3);
+}
+
+/* =====================
+OVERLAY DE RESULTADO
+===================== */
 .overlay {
 position: fixed;
 inset: 0;
@@ -292,9 +360,12 @@ animation: gatoPop 0.55s ease;
 #resultadoTexto {
 margin-top: 18px;
 font-size: clamp(24px, 5vw, 42px);
-text-shadow: 0 4px 18px rgba(0,0,0,0.45);
+text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
 }
 
+/* =====================
+ANIMACIONES
+===================== */
 @keyframes shake {
 0% { transform: translateX(0) rotate(0deg); }
 25% { transform: translateX(-8px) rotate(-2deg); }
@@ -315,88 +386,9 @@ text-shadow: 0 4px 18px rgba(0,0,0,0.45);
 100% { transform: scale(1); opacity: 1; }
 }
 
-@media (max-width: 600px) {
-.app {
-padding: 12px;
-align-items: flex-start;
-}
-
-.panel {
-margin-top: 40px;
-padding: 22px;
-}
-
-.tablero {
-width: 96vw;
-gap: 6px;
-}
-
-.caja {
-border-radius: 10px;
-}
-
-button {
-width: 100%;
-max-width: 280px;
-}
-
-.color-btn {
-width: 46px;
-height: 46px;
-}
-}
-.caja.inspeccion-preview {
-outline: 4px solid #ffffff;
-filter: brightness(1.25);
-}
-
-.caja.inspeccion-segura {
-outline: 4px solid #22c55e;
-filter: brightness(1.25);
-}
-
-.caja.inspeccion-peligro {
-outline: 4px solid #ef4444;
-filter: brightness(1.25);
-}
-.caja.fila-preview {
-box-shadow:
-0 0 0 5px #ff4d6d,
-0 0 25px rgba(255,77,109,0.85),
-inset 0 -5px 12px rgba(0,0,0,0.25);
-filter: brightness(1.3);
-}
-.logo-grande {
-width: clamp(220px, 70vw, 420px);
-}
-
-.logo-chico {
-width: clamp(200px, 80vw, 420px);
-}
-.logo {
-display: block;
-max-width: 100%;
-height: auto;
-margin: 0 auto;
-}
-.card {
-display: flex;
-flex-direction: column;
-align-items: center;
-}
-.logo-grande {
-display: block;
-margin: 0 auto 10px auto;
-.logo-grande {
-width: clamp(160px, 25vw, 220px);
-}
-}
-.logo-chico {
-width: clamp(120px, 40vw, 160px);
-margin: 0 auto 8px auto;
-display: block;
-}
-
+/* =====================
+RESPONSIVE
+===================== */
 @media (max-width: 600px) {
 .app {
 padding: 12px;
@@ -404,10 +396,14 @@ align-items: flex-start;
 }
 
 .panel,
-.card,
 #pantallaJuego {
 width: 100%;
 max-width: 100%;
+}
+
+.panel {
+margin-top: 40px;
+padding: 22px;
 }
 
 .logo-grande {
@@ -432,6 +428,31 @@ width: min(85vw, 320px);
 .tablero {
 width: 96vw;
 max-width: 96vw;
+gap: 6px;
 margin: 0 auto;
 }
+
+.caja {
+border-radius: 10px;
+}
+
+.color-btn {
+width: 46px;
+height: 46px;
+}
+}
+/* =====================
+BOTÓN FINAL CENTRADO
+===================== */
+#btnReiniciar {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+
+z-index: 30;
+
+padding: 16px 28px;
+font-size: 18px;
+
 }
