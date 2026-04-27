@@ -5,6 +5,7 @@ box-sizing: border-box;
 html {
 min-height: 100%;
 background: linear-gradient(180deg, #1b102b, #3b1d54);
+
 }
 
 body {
@@ -15,12 +16,16 @@ background-attachment: fixed;
 font-family: Arial, sans-serif;
 color: white;
 }
+
+html, body {
+overflow-x: hidden;
+}
 .app {
 min-height: 100dvh;
 padding: 18px;
 display: flex;
 justify-content: center;
-align-items: center;
+align-items: flex-start; /* 🔥 cambio clave */
 }
 
 .panel {
@@ -361,8 +366,17 @@ box-shadow:
 inset 0 -5px 12px rgba(0,0,0,0.25);
 filter: brightness(1.3);
 }
+.logo-grande {
+width: clamp(220px, 70vw, 420px);
+}
+
+.logo-chico {
+width: clamp(200px, 80vw, 420px);
+}
 .logo {
 display: block;
+max-width: 100%;
+height: auto;
 margin: 0 auto;
 }
 .card {
@@ -381,4 +395,43 @@ width: clamp(160px, 25vw, 220px);
 width: clamp(120px, 40vw, 160px);
 margin: 0 auto 8px auto;
 display: block;
+}
+
+@media (max-width: 600px) {
+.app {
+padding: 12px;
+align-items: flex-start;
+}
+
+.panel,
+.card,
+#pantallaJuego {
+width: 100%;
+max-width: 100%;
+}
+
+.logo-grande {
+width: min(85vw, 360px);
+}
+
+.logo-chico {
+width: min(92vw, 380px);
+}
+
+.opciones-tablero,
+.controles {
+flex-direction: column;
+align-items: center;
+}
+
+.boton-tablero,
+.controles button {
+width: min(85vw, 320px);
+}
+
+.tablero {
+width: 96vw;
+max-width: 96vw;
+margin: 0 auto;
+}
 }
